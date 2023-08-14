@@ -26,10 +26,15 @@ class GUI:
     def chargimg(self):
         images = ["9", "10", "as", "bo", "ja", "ki", "qu"]
         loadimg = {}
-        for image in images:
-            loadimg[image] = p.transform.scale(p.image.load("images/" + image + ".png"),
-                                               (self.__dimimg, self.__dimimg))
-        return loadimg
+        try:
+            for image in images:
+                loadimg[image] = p.transform.scale(p.image.load("images/" + image + ".png"),
+                                                   (self.__dimimg, self.__dimimg))
+            return loadimg
+        except FileNotFoundError:
+            print('fichier non trouvé')
+            return loadimg
+
 
     def betButton(self):
         p.draw.rect(self.__screen, (0, 0, 0), (750, 0, 150, 120))
@@ -51,11 +56,14 @@ class GUI:
         self.__screen.blit(mise, (760, 150))
 
     def desspieces(self, screen, slot, img):
-        for i in range(3):
-            for x in range(3):
-                case = slot[i][x]
-                screen.blit(img[case],
-                            p.Rect(i * self.__dimimg, x * self.__dimimg, self.__dimimg, self.__dimimg))
+        try:
+            for i in range(3):
+                for x in range(3):
+                    case = slot[i][x]
+                    screen.blit(img[case],
+                                p.Rect(i * self.__dimimg, x * self.__dimimg, self.__dimimg, self.__dimimg))
+        except KeyError:
+            print('image pas trouvées')
 
     def pygameLaunch(self):
         p.init()
@@ -68,12 +76,14 @@ class GUI:
         self.displayBet()
         while True:
             if Player.getpointsplayer() == 0:
-                print("vous n'avez plus de points")
-                break
+                raise EnvironmentError("vous n'avez plus de points")
             for event in p.event.get():
                 if Player.getBet() > Player.getpointsplayer():
                     a = Player.getBet()
-                    a //= 10
+                    if a > 10 :
+                        a //= 10
+                    else:
+                        raise InterruptedError("vous n'avez plus assez de points")
                     Player.setBet(a)
                 if event.type == p.QUIT:
                     sys.exit()
