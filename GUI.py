@@ -24,6 +24,13 @@ class GUI:
         self.lineColor = (0, 0, 0)
 
     def chargimg(self):
+        """
+        permet de charger les image dans l'instance e l'image
+
+        POST : renvoie un objet contenant les images des pions si les images existes avec le bon nom
+
+        Raise : les image ne sont pas trouvées : Renvoie un objet vide.
+        """
         images = ["9", "10", "as", "bo", "ja", "ki", "qu"]
         loadimg = {}
         try:
@@ -56,6 +63,16 @@ class GUI:
         self.__screen.blit(mise, (760, 150))
 
     def desspieces(self, screen, slot, img):
+        """
+        Dessines les pièces sur le plateau
+         PRE :screen contient la fenêtre pygame complète
+            Slot contient un array qui correspond au roll actuel de la machine à sous
+            img contient les images à afficher
+
+        POST : dessine les images dans la GUI
+
+        Raise : KeyError : renvoie l'erreur lrsque les image n'ont pas été charcgée au préalable car mauvais non de fichier ou de dossier.
+        """
         try:
             for i in range(3):
                 for x in range(3):
@@ -69,6 +86,12 @@ class GUI:
         p.init()
 
     def mainloop(self):
+        """
+        boucle infinie pour pouvoir jouer au jeu
+
+        Raise : EvnvironementError : se déclanche lorsque les points du joueur sont égal à 0
+        Raise : InterruptedError : se déclanche lorsque les points du joueur se trouvent en dessous de la mise.
+        """
         self.pygameLaunch()
         Slot.roll()
         ligne = []
